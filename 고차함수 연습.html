@@ -83,12 +83,12 @@
       }, {})
       console.log(datanum);
     let nineteen = people.some(
-      (people)=> {return people>19;
+      (people)=> {return 2020 - people.year>19;
       });
     console.log(nineteen);
 
     let allnineteen = people.every((people)=>{
-      return people>19;
+      return 2020 - people.year>19;
     });
     console.log(allnineteen);
 
