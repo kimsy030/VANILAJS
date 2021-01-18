@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Object</title>
+</head>
+<body>
+  <p><em> 자바스크립트 콘솔을 확인해보세요 </em> 💁</p>
+  <script>
+
+    const users = [
+        {
+            _id: 'ab12ex',
+            username: 'Alex',
+            email: 'alex@alex.com',
+            password: '123123',
+            isLoggedIn: false,
+        },
+        {
+            _id: 'fg12cy',
+            username: 'Asab',
+            email: 'asab@asab.com',
+            password: '123456',
+            isLoggedIn: false,
+        },
+        {
+            _id: 'zwf8md',
+            username: 'Brook',
+            email: 'brook@brook.com',
+            password: '123111',
+            isLoggedIn: false,
+        },
+        {
+            _id: 'eefamr',
+            username: 'Martha',
+            email: 'martha@martha.com',
+            password: '123222',
+            isLoggedIn: false,
+        },
+        {
+            _id: 'ghderc',
+            username: 'Thomas',
+            email: 'thomas@thomas.com',
+            password: '123333',
+            isLoggedIn: false,
+        }
+    ];
+
+    const products = [
+        {
+            _id: 'eedfcf',
+            name: 'mobile phone',
+            description: 'Huawei Honor',
+            price: 200,
+            ratings: [
+            { userId: 'fg12cy', rate: 5 },
+            { userId: 'zwf8md', rate: 4.5 }
+            ],
+            likes: []
+        },
+        {
+            _id: 'aegfal',
+            name: 'Laptop',
+            description: 'MacPro: System Darwin',
+            price: 2500,
+            ratings: [],
+            likes: ['fg12cy']
+        },
+        {
+            _id: 'hedfcg',
+            name: 'TV',
+            description: 'Smart TV:Procaster',
+            price: 400,
+            ratings: [{ userId: 'fg12cy', rate: 5 }],
+            likes: ['fg12cy']
+        }
+    ]
+    function signUp( _id, username, email, password){
+      checkemail = users.some(function(item){
+              return item['email']===email;
+      });
+      if(checkemail)
+        console.log("이미 존재하는 이메일 입니다.");
+      else
+        users.push({_id: _id, username: username, email: email, password: password, isLoggedIn: false});
+
+      console.log(checkemail);
+      console.log(users);
+    }
+    function signIn( _id, password){
+        checkAccount = users.some(function(item){
+            return item['_id']===_id && item['password']===password;
+        });
+        if(checkAccount){
+            result = users.find(function (item) {
+                return item['_id']===_id;
+                
+            });
+            result['isLoggedIn'] = true;
+        }
+        else 
+            console.log("존재하지 않는 계정입니다.");
+        console.log(checkAccount);
+        console.log(users);
+    }
+    function rateProduct(name, userId, rating){
+        checkItem = products.some(function(item){
+            return item['name']===name;
+        });
+        if(checkItem){
+            let result = products.find(function(item){
+                return item['name']===name;
+            });
+            result.ratings.push({userId: userId, rate: rating});
+        }
+        else{
+            console.log("존재하지 않는 물품입니다.");
+        }
+        console.log(checkItem);
+        console.log(products);
+    }
+    function averageRating(name){
+        let result = products.find(function(item){
+            return item['name']===name;
+        });
+        const sum = result.ratings.reduce(function item(pre,cur){
+           return pre+cur.rate;
+        },0);
+        const average = sum/result.ratings.length;
+        console.log(average);
+    }
+  </script>
+</body>
+</html>
