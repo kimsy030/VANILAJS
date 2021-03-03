@@ -1,0 +1,132 @@
+const timerTimeLeft = document.querySelector('.display__time-left');
+const endTime = document.querySelector('.display__end-time');
+const button = document.querySelectorAll('button[data-time]');
+const timeList = document.querySelector('.record');
+const times = JSON.parse(localStorage.getItem('times')) || [];
+
+
+var time =0;
+var hour = 0;
+var min = 0;
+var sec = 0;
+var num = 0;
+var timers;
+let countdown;
+activateClick();
+
+    function timer(seconds){
+      clearInterval(countdown);
+      const now = Date.now();
+      const then = now + seconds * 1000;
+      displayTimeLeft(seconds);
+      countdown = setInterval(() => {
+        const secondsLeft = Math.round((then - Date.now())/1000);
+        displayTimeLeft(secondsLeft);
+        displayEndTime(then);
+      }, 1000);
+
+      if(secondsLeft < 0){
+        clearInterval(countdown);
+        return;
+      }
+
+    }
+
+   function displayTimeLeft(seconds){
+      var hours = Math.floor(seconds / 3600);
+      var remainingminutes =Math.floor ((seconds % 3600) / 60);
+      var remainingSeconds = seconds % 60;
+      const timeText = `${hours < 10? '0' : ''}${hours}:${remainingminutes < 10? '0' : ''}${remainingminutes}:${remainingSeconds < 10? '0' : ''}${remainingSeconds}`;
+      console.log(timeText);
+      timerTimeLeft.textContent = timeText;
+      document.title = timeText;
+    } 
+
+    function displayEndTime(times){
+      const end = new Date(times);
+      const hour = end.getHours();
+      const mins = end.getMinutes();
+      endTime.textContent = `종료 예상 시간 : ${hour}:${mins < 10 ? '0' : ''}${mins}`;
+    }
+
+    button.forEach(button=>button.addEventListener('click', startTimer));
+
+    function startTimer(){
+      const second = parseInt(this.dataset.time);
+      timer(second);
+    }
+
+    customForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      const min = this.minutes.value;
+      timer(min * 60);
+      this.reset();
+    });
+
+    function recordList(plates = [], platesList) {
+      platesList.innerHTML = plates.map((plate, i) => {
+        return `
+          <li>
+            <label for="times${i}">${plate}</label>
+          </li>
+        `;
+      }).join('');
+    }
+
+    function stop(e){
+      localStorage.clear();
+      console.log(localStorage);
+      times.splice(0,num);
+      console.log(times);
+      localStorage.setItem('times', JSON.stringify(times));
+      recordList(times, timeList);
+      e.preventDefault();
+      clearInterval(timers);
+      time=0;
+      document.getElementById("time").innerHTML = "00:00:00";
+    }
+
+    function start(e){
+      e.preventDefault();
+        timers = setInterval(function(){
+        time++;
+
+        min = Math.floor(time/60);
+        hour = Math.floor(min/60);
+        sec = time%60;
+        min = min%60;
+
+        if(hour<10){
+          hour = "0" + hour;
+          }
+
+        if(min < 10){
+          min = "0" + min;
+          }
+
+        if(sec < 10){
+          sec = "0" + sec;
+          }
+        document.getElementById("time").innerHTML = hour + ":" + min + ":" + sec;
+      },1000); 
+    }
+
+    function record(e){
+      e.preventDefault();
+      times.push(hour + ":" + min + ":" + sec);
+      num++;
+      localStorage.setItem('times', JSON.stringify(times));
+      recordList(times, timeList);
+      console.log(localStorage);
+    }
+
+    function activateClick(){
+      const stopbtn = document.querySelector('button[type=stop]')
+      stopbtn.addEventListener('click', stop);
+
+      const startbtn = document.querySelector('button[type=start]')
+      startbtn.addEventListener('click', start);
+
+      const recordbtn = document.querySelector('button[type=record]')
+      recordbtn.addEventListener('click', record);
+    }
